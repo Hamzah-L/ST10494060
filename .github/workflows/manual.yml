@@ -1,32 +1,32 @@
-<project name="POE_Part1" default="run" basedir=".">
+name: Java CI with Ant
 
-    <property name="src.dir" value="src"/>
-    <property name="build.dir" value="build"/>
-    <property name="main.class" value="poe_part1.POE_Part1"/>
+on:
+  push:
+    branches: 
+      - main
+  pull_request:
+    branches: 
+      - main
 
-    <target name="init">
-        <mkdir dir="${build.dir}"/>
-    </target>
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-    <target name="compile" depends="init">
-        <javac srcdir="${src.dir}" destdir="${build.dir}" includeantruntime="false">
-            <classpath>
-                <fileset dir="lib" includes="**/*.jar"/>
-            </classpath>
-        </javac>
-    </target>
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    <target name="run" depends="compile">
-        <java fork="true" classname="${main.class}">
-            <classpath>
-                <pathelement path="${build.dir}"/>
-                <fileset dir="lib" includes="**/*.jar"/>
-            </classpath>
-        </java>
-    </target>
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
 
-    <target name="clean">
-        <delete dir="${build.dir}"/>
-    </target>
+      - name: Install Ant
+        run: sudo apt-get update && sudo apt-get install -y ant
 
-</project>
+      - name: Build with Ant
+        run: ant compile
+
+      - name: Run program
+        run: ant run

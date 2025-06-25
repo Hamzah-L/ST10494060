@@ -25,7 +25,14 @@ jobs:
       - name: Install Ant
         run: sudo apt-get update && sudo apt-get install -y ant
 
-      - name: Build with Ant
+      - name: Create lib directory
+        run: mkdir -p lib
+
+      - name: Download json.jar
+        run: |
+          curl -L -o lib/json-20240303.jar https://repo1.maven.org/maven2/org/json/json/20240303/json-20240303.jar
+
+      - name: Compile project with Ant
         run: ant compile
 
       - name: Run program
